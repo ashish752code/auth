@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up — NexAuth</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    <!-- Left panel -->
+    <div class="auth-left">
+      <div class="auth-left-bg"></div>
+      <div class="auth-left-content">
+        <div style="font-size: 64px; margin-bottom: 28px;">🚀</div>
+        <h2>Build something great.</h2>
+        <p style="margin-top: 12px;">
+          Get a fully featured account in seconds. No credit card. No BS. 
+          Just create an account and start building.
+        </p>
+
+        <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 10px; padding: 16px; text-align: left;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span>✓</span>
+              <span style="font-size: 14px; font-weight: 600; color: #a5a0ff;">Free account</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Create unlimited notes, access your profile, and use all features at no cost.
+            </p>
+          </div>
+          <div style="background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 10px; padding: 16px; text-align: left;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span>✓</span>
+              <span style="font-size: 14px; font-weight: 600; color: #a5a0ff;">Instant access</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              No email verification required. Your dashboard is ready the moment you sign up.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right form -->
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <a href="/" class="brand">Nex<span>Auth</span></a>
+
+        <h1 class="auth-title">Create account</h1>
+        <p class="auth-subtitle">Join and explore the full-stack template.</p>
+
+        <div id="alertBox"></div>
+
+        <form id="signupForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="name">Full name</label>
+            <input
+              type="text"
+              id="name"
+              class="form-input"
+              placeholder="Jane Smith"
+              autocomplete="name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              class="form-input"
+              placeholder="jane@example.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-group">
+              <input
+                type="password"
+                id="password"
+                class="form-input"
+                placeholder="Min. 6 characters"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password" id="togglePw" title="Show/hide">👁</button>
+            </div>
+            <div id="pwStrength" class="form-hint"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirm">Confirm password</label>
+            <input
+              type="password"
+              id="confirm"
+              class="form-input"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+              required
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg form-submit" id="submitBtn">
+            Create account
+          </button>
+        </form>
+
+        <div class="auth-switch" style="margin-top: 20px;">
+          Already have an account?
+          <a href="/login.html">Log in →</a>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6;">
+          By creating an account you agree that this is a demo project.<br>
+          Don't use real sensitive passwords here.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+    if (Auth.isLoggedIn()) window.location.href = "/dashboard.html";
+
+    const form      = document.getElementById("signupForm");
+    const alertBox  = document.getElementById("alertBox");
+    const submitBtn = document.getElementById("submitBtn");
+    const pwInput   = document.getElementById("password");
+    const pwStrength = document.getElementById("pwStrength");
+
+    // Toggle password
+    document.getElementById("togglePw").addEventListener("click", function () {
+      const pw = pwInput;
+      pw.type = pw.type === "password" ? "text" : "password";
+      this.textContent = pw.type === "password" ? "👁" : "🙈";
+    });
+
+    // Password strength indicator
+    pwInput.addEventListener("input", function () {
+      const v = this.value;
+      if (!v) { pwStrength.textContent = ""; return; }
+      let score = 0;
+      if (v.length >= 6) score++;
+      if (v.length >= 10) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+
+      const labels = ["", "Weak", "Fair", "Good", "Strong", "Very strong"];
+      const colors = ["", "#f87171", "#fbbf24", "#fbbf24", "#4ade80", "#4ade80"];
+      pwStrength.textContent = "Strength: " + (labels[score] || "Weak");
+      pwStrength.style.color = colors[score] || "#f87171";
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearAlert(alertBox);
+
+      const name     = document.getElementById("name").value.trim();
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm  = document.getElementById("confirm").value;
+
+      if (!name || !email || !password || !confirm)
+        return showAlert(alertBox, "Please fill in all fields.");
+
+      if (password !== confirm)
+        return showAlert(alertBox, "Passwords do not match.");
+
+      if (password.length < 6)
+        return showAlert(alertBox, "Password must be at least 6 characters.");
+
+      setLoading(submitBtn, true);
+      try {
+        const data = await API.post("/auth/signup", { name, email, password });
+        Auth.save(data.token, data.user);
+        Toast.success("Account created! Welcome, " + data.user.name + "!");
+        setTimeout(() => (window.location.href = "/dashboard.html"), 700);
+      } catch (err) {
+        showAlert(alertBox, err.message);
+        setLoading(submitBtn, false, "Create account");
+      }
+    });
+  </script>
+</body>
+</html>

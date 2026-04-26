@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexAuth — Modern Full-Stack Auth</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <span class="nav-brand">Nex<span>Auth</span></span>
+    <div class="nav-links" id="navLinks">
+      <a href="/login.html" class="btn btn-ghost">Log in</a>
+      <a href="/signup.html" class="btn btn-primary">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-badge">⚡ Production-ready stack</div>
+
+    <h1 class="hero-title">
+      Auth &amp; backend<br>
+      <span class="highlight">done right.</span>
+    </h1>
+
+    <p class="hero-sub">
+      A full-stack template with real JWT authentication, SQLite database, 
+      rate limiting, and a beautiful dashboard — ready to deploy.
+    </p>
+
+    <div class="hero-cta">
+      <a href="/signup.html" class="btn btn-primary btn-lg">Create free account</a>
+      <a href="/login.html" class="btn btn-ghost btn-lg">Sign in →</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">JWT</div>
+        <div class="stat-label">Secure auth</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">SQLite</div>
+        <div class="stat-label">Embedded DB</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Open source</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <div class="section-label">What's included</div>
+      <h2 class="section-title">Everything you need<br>to ship fast</h2>
+      <p class="section-sub">A complete foundation so you can focus on building your product, not boilerplate.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>JWT Authentication</h3>
+          <p>Secure stateless auth with bcrypt password hashing, token expiry, and protected API routes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🗄️</div>
+          <h3>SQLite Database</h3>
+          <p>File-based embedded database. Users, sessions and data stored persistently — no external service needed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Security Hardened</h3>
+          <p>Helmet.js headers, CORS, rate limiting, input validation, and error handling all built in.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Notes CRUD</h3>
+          <p>Create, read, update and delete notes with full user ownership and authorization checks.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Deploy-Ready</h3>
+          <p>Includes Render, Railway, and Fly.io configs. Push to GitHub and deploy with one click.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>Polished UI</h3>
+          <p>Dark-mode dashboard, responsive design, toast notifications, and smooth animations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding: 100px 0; text-align: center; border-top: 1px solid var(--border);">
+    <div class="container">
+      <h2 style="font-size: 2.4rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 16px;">
+        Ready to build?
+      </h2>
+      <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 16px;">
+        Create your account and explore the dashboard.
+      </p>
+      <a href="/signup.html" class="btn btn-primary btn-lg">Get started for free →</a>
+    </div>
+  </section>
+
+  <footer style="text-align:center; padding: 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 13px;">
+    Built with Node.js · Express · SQLite · JWT &nbsp;|&nbsp; Open source on GitHub
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (Auth.isLoggedIn()) {
+      document.getElementById("navLinks").innerHTML = `
+        <a href="/dashboard.html" class="btn btn-primary">Go to Dashboard →</a>`;
+    }
+  </script>
+</body>
+</html>

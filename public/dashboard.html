@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — NexAuth</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">Nex<span>Auth</span></div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-tab="overview">
+          <span class="icon">🏠</span> Overview
+        </div>
+        <div class="nav-item" data-tab="notes">
+          <span class="icon">📋</span> My Notes
+        </div>
+        <div class="nav-item" data-tab="profile">
+          <span class="icon">👤</span> Profile
+        </div>
+        <div class="nav-item" data-tab="api">
+          <span class="icon">🔌</span> API Explorer
+        </div>
+      </nav>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar" id="sidebarAvatar">?</div>
+          <div>
+            <div class="user-name" id="sidebarName">Loading…</div>
+            <div class="user-email" id="sidebarEmail"></div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="width:100%;" id="logoutBtn">
+          🚪 Log out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <!-- ── OVERVIEW TAB ── -->
+      <div class="tab-page active" id="tab-overview">
+        <div class="page-header">
+          <h1 id="welcomeMsg">Welcome back!</h1>
+          <p>Here's what's happening with your account.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.3);">📋</div>
+            <div class="stat-card-value" id="statNotes">—</div>
+            <div class="stat-card-label">Total notes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.3);">👥</div>
+            <div class="stat-card-value" id="statUsers">—</div>
+            <div class="stat-card-label">Total users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3);">📅</div>
+            <div class="stat-card-value" id="statJoined">—</div>
+            <div class="stat-card-label">Member since</div>
+          </div>
+        </div>
+
+        <!-- Recent notes preview -->
+        <div style="margin-top: 8px;">
+          <div class="notes-header">
+            <h2>Recent Notes</h2>
+            <button class="btn btn-outline btn-sm" id="viewAllNotes">View all →</button>
+          </div>
+          <div class="notes-grid" id="recentNotes">
+            <div style="color: var(--text-muted); font-size: 14px; padding: 20px 0; grid-column: 1/-1;">
+              Loading…
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── NOTES TAB ── -->
+      <div class="tab-page" id="tab-notes">
+        <div class="page-header">
+          <h1>My Notes</h1>
+          <p>Create and manage your personal notes.</p>
+        </div>
+
+        <div class="notes-header">
+          <span id="notesCount" style="color: var(--text-muted); font-size: 14px;"></span>
+          <button class="btn btn-primary btn-sm" id="newNoteBtn">+ New Note</button>
+        </div>
+
+        <div class="notes-grid" id="notesGrid">
+          <div style="color: var(--text-muted); font-size: 14px; padding: 20px 0;">Loading…</div>
+        </div>
+      </div>
+
+      <!-- ── PROFILE TAB ── -->
+      <div class="tab-page" id="tab-profile">
+        <div class="page-header">
+          <h1>Profile</h1>
+          <p>Manage your account details and password.</p>
+        </div>
+
+        <div style="max-width: 500px;">
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px;">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px;">Account Information</h3>
+            <div id="profileAlert"></div>
+            <form id="profileForm">
+              <div class="form-group">
+                <label class="form-label">Full name</label>
+                <input type="text" id="profileName" class="form-input" placeholder="Your name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email address</label>
+                <input type="email" id="profileEmail" class="form-input" disabled style="opacity:0.6; cursor:not-allowed;">
+                <div class="form-hint">Email cannot be changed.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Member since</label>
+                <input type="text" id="profileJoined" class="form-input" disabled style="opacity:0.6; cursor:not-allowed;">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm" id="profileSaveBtn">Save name</button>
+            </form>
+          </div>
+
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px;">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px;">Change Password</h3>
+            <div id="pwAlert"></div>
+            <form id="passwordForm">
+              <div class="form-group">
+                <label class="form-label">Current password</label>
+                <input type="password" id="currentPw" class="form-input" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New password</label>
+                <input type="password" id="newPw" class="form-input" placeholder="Min. 6 characters">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm new password</label>
+                <input type="password" id="confirmPw" class="form-input" placeholder="Repeat new password">
+              </div>
+              <button type="submit" class="btn btn-outline btn-sm" id="pwSaveBtn">Change password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── API EXPLORER TAB ── -->
+      <div class="tab-page" id="tab-api">
+        <div class="page-header">
+          <h1>API Explorer</h1>
+          <p>Live API endpoints you can call with your token.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 720px;">
+
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <span style="background: rgba(74,222,128,0.15); color: var(--success); border: 1px solid rgba(74,222,128,0.3); padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700;">GET</span>
+              <code style="font-family: monospace; font-size: 14px; color: var(--text-muted);">/api/auth/me</code>
+              <button class="btn btn-ghost btn-sm" style="margin-left: auto;" onclick="runEndpoint('GET','/api/auth/me','apiResult1')">Run →</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Returns the currently authenticated user's profile.</p>
+            <pre id="apiResult1" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 12px; font-family: monospace; color: var(--text-muted); overflow: auto; min-height: 48px;">Click "Run →" to execute</pre>
+          </div>
+
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <span style="background: rgba(74,222,128,0.15); color: var(--success); border: 1px solid rgba(74,222,128,0.3); padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700;">GET</span>
+              <code style="font-family: monospace; font-size: 14px; color: var(--text-muted);">/api/notes</code>
+              <button class="btn btn-ghost btn-sm" style="margin-left: auto;" onclick="runEndpoint('GET','/api/notes','apiResult2')">Run →</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Returns all notes belonging to the authenticated user.</p>
+            <pre id="apiResult2" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 12px; font-family: monospace; color: var(--text-muted); overflow: auto; min-height: 48px;">Click "Run →" to execute</pre>
+          </div>
+
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <span style="background: rgba(74,222,128,0.15); color: var(--success); border: 1px solid rgba(74,222,128,0.3); padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700;">GET</span>
+              <code style="font-family: monospace; font-size: 14px; color: var(--text-muted);">/api/notes/user/stats</code>
+              <button class="btn btn-ghost btn-sm" style="margin-left: auto;" onclick="runEndpoint('GET','/api/notes/user/stats','apiResult3')">Run →</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Returns aggregate stats: note count, last activity, total users.</p>
+            <pre id="apiResult3" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 12px; font-family: monospace; color: var(--text-muted); overflow: auto; min-height: 48px;">Click "Run →" to execute</pre>
+          </div>
+
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <span style="background: rgba(74,222,128,0.15); color: var(--success); border: 1px solid rgba(74,222,128,0.3); padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700;">GET</span>
+              <code style="font-family: monospace; font-size: 14px; color: var(--text-muted);">/api/health</code>
+              <button class="btn btn-ghost btn-sm" style="margin-left: auto;" onclick="runEndpoint('GET','/api/health','apiResult4')">Run →</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Health check endpoint — no authentication required.</p>
+            <pre id="apiResult4" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 12px; font-family: monospace; color: var(--text-muted); overflow: auto; min-height: 48px;">Click "Run →" to execute</pre>
+          </div>
+
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;">
+            <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Your JWT Token</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Use this in the <code style="font-family: monospace;">Authorization: Bearer &lt;token&gt;</code> header.</p>
+            <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 11px; font-family: monospace; word-break: break-all; color: var(--accent);" id="tokenDisplay"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Note Modal -->
+  <div class="modal-overlay" id="noteModal" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">New Note</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div id="noteModalAlert"></div>
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" id="noteTitle" class="form-input" placeholder="Note title…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content</label>
+        <textarea id="noteContent" class="modal-textarea" placeholder="Write your note here…"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modalCancel">Cancel</button>
+        <button class="btn btn-primary" id="modalSave">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+    // ── Guard ──────────────────────────────────────────────────────────────
+    if (!Auth.isLoggedIn()) window.location.href = "/login.html";
+
+    // ── State ──────────────────────────────────────────────────────────────
+    let notes = [];
+    let editingNoteId = null;
+    const user = Auth.user();
+
+    // ── Sidebar user info ──────────────────────────────────────────────────
+    if (user) {
+      document.getElementById("sidebarName").textContent = user.name;
+      document.getElementById("sidebarEmail").textContent = user.email;
+      document.getElementById("sidebarAvatar").textContent = user.name.charAt(0).toUpperCase();
+      document.getElementById("welcomeMsg").textContent = `Welcome back, ${user.name.split(" ")[0]}! 👋`;
+
+      // Profile tab
+      document.getElementById("profileEmail").value = user.email;
+      document.getElementById("profileName").value = user.name;
+    }
+
+    // ── Tab navigation ─────────────────────────────────────────────────────
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+      document.getElementById("tab-" + tabId).classList.add("active");
+      document.querySelector(`[data-tab="${tabId}"]`).classList.add("active");
+    }
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const tab = item.dataset.tab;
+        switchTab(tab);
+        if (tab === "notes") loadNotes();
+        if (tab === "overview") loadOverview();
+        if (tab === "api") document.getElementById("tokenDisplay").textContent = API.getToken();
+      });
+    });
+
+    document.getElementById("viewAllNotes").addEventListener("click", () => {
+      switchTab("notes");
+      loadNotes();
+    });
+
+    // ── Logout ─────────────────────────────────────────────────────────────
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      Auth.clear();
+      Toast.info("Logged out.");
+      setTimeout(() => (window.location.href = "/"), 600);
+    });
+
+    // ── Format date ────────────────────────────────────────────────────────
+    function fmt(dateStr) {
+      if (!dateStr) return "—";
+      const d = new Date(dateStr);
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    }
+
+    // ── Load overview stats ────────────────────────────────────────────────
+    async function loadOverview() {
+      try {
+        const [statsData, notesData, profileData] = await Promise.all([
+          API.get("/notes/user/stats"),
+          API.get("/notes"),
+          API.get("/auth/me"),
+        ]);
+
+        document.getElementById("statNotes").textContent = statsData.stats.totalNotes;
+        document.getElementById("statUsers").textContent = statsData.stats.totalUsers;
+        document.getElementById("statJoined").textContent = fmt(profileData.user.created_at).split(",")[1]?.trim() || fmt(profileData.user.created_at);
+
+        notes = notesData.notes;
+        renderRecentNotes(notes.slice(0, 3));
+
+        // Update profile tab
+        document.getElementById("profileName").value = profileData.user.name;
+        document.getElementById("profileEmail").value = profileData.user.email;
+        document.getElementById("profileJoined").value = fmt(profileData.user.created_at);
+      } catch (e) {
+        if (e.message.includes("token") || e.message.includes("log in")) {
+          Auth.clear(); window.location.href = "/login.html";
+        }
+      }
+    }
+
+    function renderRecentNotes(list) {
+      const el = document.getElementById("recentNotes");
+      if (!list.length) {
+        el.innerHTML = `<div class="note-empty"><div class="empty-icon">📝</div><h3>No notes yet</h3><p>Create your first note in the Notes tab.</p></div>`;
+        return;
+      }
+      el.innerHTML = list.map(n => noteCardHTML(n)).join("");
+    }
+
+    // ── Load notes ─────────────────────────────────────────────────────────
+    async function loadNotes() {
+      const grid = document.getElementById("notesGrid");
+      grid.innerHTML = `<div style="color: var(--text-muted); font-size: 14px; padding: 20px 0; grid-column:1/-1;">Loading…</div>`;
+      try {
+        const data = await API.get("/notes");
+        notes = data.notes;
+        renderNotes(notes);
+        document.getElementById("notesCount").textContent = `${notes.length} note${notes.length !== 1 ? "s" : ""}`;
+      } catch (e) {
+        grid.innerHTML = `<div style="color: var(--error); grid-column:1/-1;">Failed to load notes.</div>`;
+      }
+    }
+
+    function noteCardHTML(n) {
+      return `
+        <div class="note-card" data-id="${n.id}">
+          <div class="note-title" title="${escHtml(n.title)}">${escHtml(n.title)}</div>
+          <div class="note-preview">${escHtml(n.content || "No content") }</div>
+          <div class="note-footer">
+            <span class="note-date">${fmt(n.updated_at)}</span>
+            <div class="note-actions">
+              <button class="btn btn-ghost btn-sm" onclick="editNote(${n.id}, event)">✏️</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteNote(${n.id}, event)">🗑</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderNotes(list) {
+      const grid = document.getElementById("notesGrid");
+      if (!list.length) {
+        grid.innerHTML = `
+          <div class="note-empty">
+            <div class="empty-icon">📋</div>
+            <h3>No notes yet</h3>
+            <p>Click "+ New Note" to create your first one.</p>
+          </div>`;
+        return;
+      }
+      grid.innerHTML = list.map(n => noteCardHTML(n)).join("");
+    }
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // ── Modal ──────────────────────────────────────────────────────────────
+    const modal = document.getElementById("noteModal");
+
+    function openModal(title = "New Note", noteTitle = "", noteContent = "") {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("noteTitle").value = noteTitle;
+      document.getElementById("noteContent").value = noteContent;
+      clearAlert(document.getElementById("noteModalAlert"));
+      modal.style.display = "flex";
+      document.getElementById("noteTitle").focus();
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+      editingNoteId = null;
+    }
+
+    document.getElementById("modalClose").addEventListener("click", closeModal);
+    document.getElementById("modalCancel").addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+    document.getElementById("newNoteBtn").addEventListener("click", () => {
+      editingNoteId = null;
+      openModal("New Note");
+    });
+
+    document.getElementById("modalSave").addEventListener("click", async () => {
+      const title   = document.getElementById("noteTitle").value.trim();
+      const content = document.getElementById("noteContent").value.trim();
+      const alertEl = document.getElementById("noteModalAlert");
+
+      if (!title) return showAlert(alertEl, "Title is required.");
+
+      const saveBtn = document.getElementById("modalSave");
+      setLoading(saveBtn, true);
+
+      try {
+        if (editingNoteId) {
+          await API.put(`/notes/${editingNoteId}`, { title, content });
+          Toast.success("Note updated!");
+        } else {
+          await API.post("/notes", { title, content });
+          Toast.success("Note created!");
+        }
+        closeModal();
+        await loadNotes();
+        await loadOverview();
+      } catch (e) {
+        showAlert(alertEl, e.message);
+        setLoading(saveBtn, false, "Save Note");
+      }
+    });
+
+    function editNote(id, e) {
+      e && e.stopPropagation();
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      editingNoteId = id;
+      openModal("Edit Note", note.title, note.content || "");
+    }
+
+    async function deleteNote(id, e) {
+      e && e.stopPropagation();
+      if (!confirm("Delete this note? This cannot be undone.")) return;
+      try {
+        await API.delete(`/notes/${id}`);
+        Toast.success("Note deleted.");
+        await loadNotes();
+        await loadOverview();
+      } catch (err) {
+        Toast.error(err.message);
+      }
+    }
+
+    // ── Profile update ─────────────────────────────────────────────────────
+    document.getElementById("profileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const alertEl  = document.getElementById("profileAlert");
+      const name     = document.getElementById("profileName").value.trim();
+      const saveBtn  = document.getElementById("profileSaveBtn");
+
+      if (!name) return showAlert(alertEl, "Name cannot be empty.");
+
+      setLoading(saveBtn, true);
+      try {
+        const data = await API.put("/auth/profile", { name });
+        Auth.save(API.getToken(), data.user);
+        document.getElementById("sidebarName").textContent = data.user.name;
+        document.getElementById("sidebarAvatar").textContent = data.user.name.charAt(0).toUpperCase();
+        showAlert(alertEl, "Name updated!", "success");
+        Toast.success("Profile saved!");
+      } catch (err) {
+        showAlert(alertEl, err.message);
+      } finally {
+        setLoading(saveBtn, false, "Save name");
+      }
+    });
+
+    document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const alertEl  = document.getElementById("pwAlert");
+      const currentPw = document.getElementById("currentPw").value;
+      const newPw     = document.getElementById("newPw").value;
+      const confirmPw = document.getElementById("confirmPw").value;
+      const saveBtn   = document.getElementById("pwSaveBtn");
+
+      if (!currentPw || !newPw || !confirmPw)
+        return showAlert(alertEl, "All password fields are required.");
+
+      if (newPw !== confirmPw)
+        return showAlert(alertEl, "New passwords do not match.");
+
+      setLoading(saveBtn, true);
+      try {
+        await API.put("/auth/profile", { currentPassword: currentPw, newPassword: newPw });
+        showAlert(alertEl, "Password changed successfully!", "success");
+        Toast.success("Password updated!");
+        document.getElementById("passwordForm").reset();
+      } catch (err) {
+        showAlert(alertEl, err.message);
+      } finally {
+        setLoading(saveBtn, false, "Change password");
+      }
+    });
+
+    // ── API Explorer ───────────────────────────────────────────────────────
+    async function runEndpoint(method, path, resultId) {
+      const el = document.getElementById(resultId);
+      el.textContent = "Loading…";
+      el.style.color = "var(--text-muted)";
+      try {
+        const data = await API.get(path);
+        el.textContent = JSON.stringify(data, null, 2);
+        el.style.color = "var(--success)";
+      } catch (err) {
+        el.textContent = `Error: ${err.message}`;
+        el.style.color = "var(--error)";
+      }
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────────
+    loadOverview();
+  </script>
+</body>
+</html>
